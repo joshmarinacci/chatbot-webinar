@@ -71,7 +71,6 @@ function sendTranslate(text, lang) {
 
 function sendAlchemy(text) {
     return new Promise((res,rej)=>{
-
         var parameters = {
             extract: 'keywords,relations,language',
             maxRetrieve: 1,

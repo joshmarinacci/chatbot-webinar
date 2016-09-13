@@ -32,7 +32,7 @@ var parameters = {
     //--text:'please tell me about gneiss',
     //text:'do you like gneiss?',
     //text:'What music do you listen to?',
-    //text:'Raconte moi une blague',
+    //---text:'Raconte moi une blague',
     text:'help',
 };
 

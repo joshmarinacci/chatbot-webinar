@@ -1,0 +1,62 @@
+<html>
+<head>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.0.8.js"></script>
+    <style type="text/css">
+        .hbox {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+            width: 50em;
+        }
+        .grow {  flex: 1;   }
+        textarea { height: 30em; }
+        #error { color: red; }
+    </style>
+<body>
+<div class='hbox'>
+    <textarea id='history' class='grow'></textarea>
+</div>
+<div class='hbox'>
+    <input id='message' class='grow'/>
+    <button id='send'>Send</button>
+</div>
+<div class='hbox' id='error'></div>
+<script type="text/javascript">
+    // a simple JQuery like function to get elements by ID
+    function $(id) {
+        return document.getElementById(id);
+    }
+
+    //configure pubnub
+    var pubnub = new PubNub({
+        subscribeKey:"sub-c-b89ea32a-79f1-11e6-9195-02ee2ddab7fe",
+        publishKey:"pub-c-91ff2cc0-42ff-4783-abfd-e6283ff5348b"
+    });
+    //when message comes in
+    pubnub.addListener({
+        message: function(msg) {
+            //if rejected, show error
+            if(msg.message.rejected) {
+                $('error').innerHTML = msg.message.reason;
+                return;
+            }
+            //append to history
+            $('history').value += msg.message.text + '\n';
+        }
+    });
+    //listen to the 'radchat' channel
+    pubnub.subscribe({channels:['radchat']});
+    //which click the send button
+    $('send').addEventListener('click',function() {
+        //send the message
+        pubnub.publish({
+            channel:'chatbot',
+            message:{text: $('message').value}
+        });
+        $('error').innerHTML = '';
+    });
+
+</script>
+</body>
+</html>

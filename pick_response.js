@@ -100,9 +100,13 @@ function pick(arr) {
 
 module.exports.pick = function(action, term) {
     if(action == 'knowledge') {
-        return responses.knowledge[term];
+        if(module.exports.hasKnowledge(term)) {
+            return responses.knowledge[term];
+        } else {
+            return pick(responses.random);
+        }
     }
-    console.log("poicking knowledge",action,term);
+    console.log("picking action",action,term);
     if(action == 'favorites') {
         return pick(responses.favorites[term]);
     }

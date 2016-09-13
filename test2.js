@@ -2,6 +2,7 @@
  * Created by josh on 9/13/16.
  */
 var util = require('util');
+var rp = require('request-promise-native');
 
 var responses = require('./pick_response');
 //init alchemy
@@ -50,7 +51,7 @@ function proc(text) {
         console.log("the cooked version is", cooked);
         return getResponse(cooked);
     }).then((resp)=>{
-        console.log("final response is",resp);
+        console.log("final response is",resp, typeof resp);
     }).catch((e)=>{
         console.log("error = ", e);
     })
@@ -96,15 +97,14 @@ function cook(parsed, original) {
             if(mtch) {
                 console.log("match is", mtch);
                 var term = mtch[1];
-                if (term && responses.hasKnowledge(term)) {
+                if (term) {
                     return res({action: 'knowledge', 'term': term});
                 }
             }
             if(original.match(/food/i))  return res({action:'favorites',term:'food'});
             if(original.match(/movie/i)) return res({action:'favorites',term:'movie'});
             if(original.match(/music/i)) return res({action:'favorites',term:'music'});
-
-            if(original.match(/help/i)) return res({action:'help'});
+            if(original.match(/help/i))  return res({action:'help'});
 
             console.log("couldn't determine anything to do");
             return res({action:'random'});
@@ -118,21 +118,36 @@ function cook(parsed, original) {
             return res({action:'joke'})
         }
 
-        console.log("couldon't determin anything to do");
+        console.log("couldn't determine anything to do");
+        return res({action:'random'});
     })
 }
 
 function getResponse(cooked) {
+    var options = {
+        uri: 'http://localhost:8112/response',
+        qs: {
+            action:cooked.action,
+            term:cooked.term
+        },
+        json: true // Automatically parses the JSON string in the response
+    };
+
+    return rp(options).then((json)=>{
+        return json;
+    });
+/*
     return new Promise((res,rej)=>{
         return res(responses.pick(cooked.action, cooked.term));
-    });
+    });*/
 }
 
 
 
 //proc(process.argv[2]);
-proc('Raconte moi une blague');
-//proc('What is feldspar?');
+//proc('Raconte moi une blague');
+proc('What is feldspar?'); // known term
+//proc('What is quartzite?'); //unknown term
 //proc('what is gneiss');
 //proc('What is quartz?');
 //proc('What food do you like to eat?');

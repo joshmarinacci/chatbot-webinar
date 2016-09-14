@@ -110,7 +110,9 @@ module.exports.pick = function(action, term) {
     if(action == 'favorites') {
         return pick(responses.favorites[term]);
     }
-    return pick(responses[action]);
+    if(responses[action]) return pick(responses[action]);
+    return { error:"unknown action " + action};
+//    return pick(responses[action]);
 };
 
 module.exports.hasKnowledge = function(term) {

@@ -29,7 +29,7 @@ var responses = {
     random: [
         "I think you rock!",
         "Mr Rockbot here. Are you having a nice day?",
-        "When your rock, remember it's not spelled RAWK.",
+        "When you rock, remember it's spelled ROCK, not spelled RAWK.",
         "You know what they say a diamond is a robot's best friend.",
         "Come on. My jokes rock! Ask me some more!",
         "Always remember, it’s the sediment that counts.",

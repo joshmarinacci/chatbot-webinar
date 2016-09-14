@@ -2,26 +2,112 @@
 <head>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.0.8.js"></script>
     <style type="text/css">
+        @font-face {
+            src: url(./mrrobot.ttf);
+            font-family: "mrrobot";
+        }
+        body {
+            font-size: 300%;
+            background-color: black;
+            color: white;
+            margin:0;
+            padding: 0;
+        }
+        .vbox {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+        :focus {
+            outline: none;
+        }
         .hbox {
             display: -webkit-flex;
             display: flex;
             -webkit-flex-direction: row;
             flex-direction: row;
-            width: 50em;
+        }
+        .fill {
+            position: absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
         }
         .grow {  flex: 1;   }
         textarea { height: 30em; }
+        .debug { border: 1px solid red; }
+        #history {
+            border: 0px solid green;
+            padding: 0.2em;
+            padding-left: 1em;
+            margin-bottom: 1em;
+            margin-top: 1em;
+            width: 100%;
+            border-left: 3px solid red;
+        }
+        input, button {
+            font-size: inherit;
+        }
+
+        button, input {
+            border: 3px solid white;
+            background-color: black;
+            color: white;
+            margin: 0.1em;
+            padding: 0.5em;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+            padding: 0.1em 0 0 0;
+            margin: 0;
+            font-family: "mrrobot";
+            color: red;
+            font-size: 300%;
+        }
+        #message {
+        }
+        .wrapper {
+            padding: 1em 1em 1em 1em;
+        }
+
+        #history p {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            border: 1px solid red;
+            border-width: 0 0 0px 0;
+            padding-bottom: 0.5em;
+
+        }
+
+        .bot {
+            text-transform: lowercase;
+            font-weight: bold;
+        }
+        .bot b {
+            color: red;
+        }
+        .user {
+            color: #d0d0d0;
+        }
     </style>
 <body>
-<div class='hbox'>
-    <textarea id='history' class='grow'></textarea>
-</div>
-<div class='hbox'>
-    <input id='message' class='grow'/>
-    <button id='send'>Send</button>
-</div>
-<div class="hbox">
-    <button id="french-joke">Tell me a joke [fr]</button>
+<div class="fill vbox wrapper">
+    <h1>MR ROCKBOT</h1>
+    <div class='hbox grow'>
+        <div id="history">
+            <p class="user"><b>User:</b> Hi mister rockbot, how are you doing today?</p>
+            <p class="bot"><b>MR ROCKBOT</b>: Hello. I'm happy to meet you.</p>
+        </div>
+    </div>
+    <div class='hbox'>
+        <input id='message' class='grow' value="Tell me a joke"/>
+        <button id='send'>Send</button>
+    </div>
+    <div class="hbox">
+        <button id="french-joke">Tell me a joke [fr]</button>
+    </div>
 </div>
 <script type="text/javascript">
     // a simple JQuery like function to get elements by ID

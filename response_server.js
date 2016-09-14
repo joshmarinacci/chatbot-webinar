@@ -10,6 +10,7 @@ app.set("json spaces",4);
 app.use(bodyParser.json());
 app.get("/response",(req,res)=>{
     console.log("request = ", req.query);
+    if(!req.query) return res.json({error:"query missing"});
     res.json(response.pick(req.query.action, req.query.term));
 });
 

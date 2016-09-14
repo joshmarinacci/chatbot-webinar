@@ -11,7 +11,6 @@
         }
         .grow {  flex: 1;   }
         textarea { height: 30em; }
-        #error { color: red; }
     </style>
 <body>
 <div class='hbox'>
@@ -21,7 +20,9 @@
     <input id='message' class='grow'/>
     <button id='send'>Send</button>
 </div>
-<div class='hbox' id='error'></div>
+<div class="hbox">
+    <button id="french-joke">Tell me a joke [fr]</button>
+</div>
 <script type="text/javascript">
     // a simple JQuery like function to get elements by ID
     function $(id) {
@@ -36,26 +37,34 @@
     //when message comes in
     pubnub.addListener({
         message: function(msg) {
-            //if rejected, show error
-            if(msg.message.rejected) {
-                $('error').innerHTML = msg.message.reason;
-                return;
-            }
-            //append to history
-            $('history').value += msg.message.text + '\n';
+            var res = msg.message.response;
+            console.log("got back the message",msg.message);
+            $('history').value += res + '\n';
         }
     });
     //listen to the 'radchat' channel
-    pubnub.subscribe({channels:['radchat']});
+    pubnub.subscribe({channels:['chatbot-response']});
     //which click the send button
-    $('send').addEventListener('click',function() {
+    $('send').addEventListener('click',sendChat);
+    function sendChat() {
+        var val = $('message').value;
+        $('history').value += val + '\n';
         //send the message
         pubnub.publish({
             channel:'chatbot',
-            message:{text: $('message').value}
+            message:{text: val}
         });
-        $('error').innerHTML = '';
+        $('message').value = '';
+        $('message').focus();
+    };
+    $('message').addEventListener('keypress',function(e) {
+        if(e.keyCode == 13) sendChat();
     });
+
+    $('french-joke').addEventListener('click',function() {
+        $('message').value = 'Raconte moi une blague';
+        $('message').focus();
+    })
 
 </script>
 </body>

@@ -39,7 +39,7 @@
         message: function(msg) {
             var res = msg.message.response;
             console.log("got back the message",msg.message);
-            $('history').value += res + '\n';
+            $('history').value += ('MR ROCKBOT: '+res + '\n');
         }
     });
     //listen to the 'radchat' channel
@@ -48,7 +48,7 @@
     $('send').addEventListener('click',sendChat);
     function sendChat() {
         var val = $('message').value;
-        $('history').value += val + '\n';
+        $('history').value += ('me: '+ val + '\n');
         //send the message
         pubnub.publish({
             channel:'chatbot',

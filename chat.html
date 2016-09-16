@@ -81,6 +81,7 @@
         #history p {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             padding-bottom: 0.5em;
+            clear: both;
         }
 
         #history-wrapper {
@@ -100,6 +101,9 @@
         }
         .user {
             color: #d0d0d0;
+        }
+        .giphy {
+            float: right;
         }
     </style>
 <body>
@@ -129,14 +133,20 @@
 
     function appendBotMessage(obj) {
         console.log("got an object", obj);
-        var text = obj.text;
-        if(obj.url) {
-            text += "<br/><a href='"+obj.url+"' target='_blank'>more</a>";
+        var text = "<p class='bot'><b>mr rockbot</b>: ";
+        if(obj.img) {
+            text = text + "<img  class='giphy' height='300' src='"+obj.img+"/>";
         }
-        var ftext = "<p class='bot'><b>mr rockbot</b>: "+text+"</p>"
-        console.log("final text is", ftext);
-        $('history').innerHTML += ftext;
-        $('history').scrollTop = $('history').scrollHeight;
+        text = text + obj.text;
+        if(obj.url) {
+            text = text + "<br/><a href='"+obj.url+"' target='_blank'>more</a>";
+        }
+        text = text + '</p>';
+        console.log("final text is", text);
+        $('history').innerHTML += text;
+        setTimeout(function() {
+            $('history').scrollTop = $('history').scrollHeight;
+        },100);
     }
 
     //configure pubnub

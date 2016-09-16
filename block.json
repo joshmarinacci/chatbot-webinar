@@ -1,0 +1,32 @@
+{
+    "_key_id": 215373,
+    "_id": 722,
+    "name": "mrrockbot",
+    "description": "javaone demo chatbot",
+    "event_handlers": [
+        {
+            "_id": 820,
+            "name": "ingestMessage",
+            "event": "js-before-publish",
+            "channels": "chatbot",
+            "file": "js-before-publish/ingestMessage.js",
+            "output": "output-0.8860804201103747"
+        },
+        {
+            "_id": 826,
+            "name": "cook",
+            "event": "js-before-publish",
+            "channels": "cook-message",
+            "file": "js-before-publish/cook.js",
+            "output": "output-09120530625805259"
+        },
+        {
+            "_id": 827,
+            "name": "responseCalculator",
+            "event": "js-before-publish",
+            "channels": "fetch-response",
+            "file": "js-before-publish/responseCalculator.js",
+            "output": "output-08561247172765434"
+        }
+    ]
+}

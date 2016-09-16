@@ -72,6 +72,7 @@
             font-size: 300%;
         }
         #message {
+            font-weight: normal;
         }
         .wrapper {
             padding: 1em 1em 1em 1em;
@@ -93,6 +94,10 @@
         }
         .bot b {
             color: red;
+        }
+        .bot a {
+            color: red;
+            font-weight: bold;
         }
         .user {
             color: #d0d0d0;
@@ -123,6 +128,20 @@
         return document.getElementById(id);
     }
 
+    function appendBotMessage(obj) {
+        if(typeof obj === 'string') {
+            console.log("simple string");
+            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
+                    +obj+"</p>"
+        } else {
+            console.log("got an object");
+            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
+                    + obj.text+"<br/>"
+                    +"<a href='"+obj.url+"' target='_blank'>more</a></p>"
+        }
+        $('history').scrollTop = $('history').scrollHeight;
+    }
+
     //configure pubnub
     var pubnub = new PubNub({
         subscribeKey:"sub-c-b89ea32a-79f1-11e6-9195-02ee2ddab7fe",
@@ -133,13 +152,7 @@
         message: function(msg) {
             var res = msg.message.response;
             console.log("got back the message",msg.message);
-            if(typeof msg.message.response === 'string') {
-                console.log("simple string");
-            } else {
-                console.log("got an object");
-            }
-            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "+msg.message.response+"</p>"
-            $('history').scrollTop = $('history').scrollHeight;
+            appendBotMessage(msg.message.response)
         }
     });
     //listen to the 'radchat' channel

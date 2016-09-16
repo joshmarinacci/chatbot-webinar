@@ -36,6 +36,10 @@
             bottom:0;
         }
         .grow {  flex: 1;   }
+        .scroll {
+            overflow-y: scroll;
+        }
+
         textarea { height: 30em; }
         .debug { border: 1px solid red; }
         #history {
@@ -75,10 +79,12 @@
 
         #history p {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding-bottom: 0.5em;
+        }
+
+        #history-wrapper {
             border: 1px solid red;
             border-width: 0 0 0px 0;
-            padding-bottom: 0.5em;
-
         }
 
         .bot {
@@ -95,8 +101,10 @@
 <body>
 <div class="fill vbox wrapper">
     <h1>MR ROCKBOT</h1>
-    <div class='hbox grow'>
-        <div id="history">
+    <div class='hbox grow' id="history-wrapper">
+        <div id="history" class="scroll">
+            <p class="user"><b>User:</b> Hi mister rockbot, how are you doing today?</p>
+            <p class="bot"><b>MR ROCKBOT</b>: Hello. I'm happy to meet you.</p>
             <p class="user"><b>User:</b> Hi mister rockbot, how are you doing today?</p>
             <p class="bot"><b>MR ROCKBOT</b>: Hello. I'm happy to meet you.</p>
         </div>
@@ -125,7 +133,13 @@
         message: function(msg) {
             var res = msg.message.response;
             console.log("got back the message",msg.message);
-            $('history').value += ('MR ROCKBOT: '+res + '\n');
+            if(typeof msg.message.response === 'string') {
+                console.log("simple string");
+            } else {
+                console.log("got an object");
+            }
+            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "+msg.message.response+"</p>"
+            $('history').scrollTop = $('history').scrollHeight;
         }
     });
     //listen to the 'radchat' channel

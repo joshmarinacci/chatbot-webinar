@@ -2,30 +2,144 @@
 <head>
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.0.8.js"></script>
     <style type="text/css">
+        @font-face {
+            src: url(./mrrobot.ttf);
+            font-family: "mrrobot";
+        }
+        body {
+            font-size: 250%;
+            background-color: black;
+            color: white;
+            margin:0;
+            padding: 0;
+        }
+        .vbox {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+        :focus {
+            outline: none;
+        }
         .hbox {
             display: -webkit-flex;
             display: flex;
             -webkit-flex-direction: row;
             flex-direction: row;
-            width: 50em;
+        }
+        .fill {
+            position: absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
         }
         .grow {  flex: 1;   }
+        .scroll {
+            overflow-y: scroll;
+        }
+
         textarea { height: 30em; }
-        #error { color: red; }
+        .debug { border: 1px solid red; }
+        #history {
+            border: 0px solid green;
+            padding: 0.2em;
+            padding-left: 1em;
+            margin-bottom: 1em;
+            margin-top: 1em;
+            width: 100%;
+            border-left: 3px solid red;
+        }
+        input, button {
+            font-size: inherit;
+        }
+
+        button, input {
+            border: 3px solid white;
+            background-color: black;
+            color: white;
+            margin: 0.1em;
+            padding: 0.5em;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+            padding: 0.1em 0 0 0;
+            margin: 0;
+            font-family: "mrrobot";
+            color: red;
+            font-size: 300%;
+        }
+        #message {
+            font-weight: normal;
+        }
+        .wrapper {
+            padding: 1em 1em 1em 1em;
+        }
+
+        #history p {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding-bottom: 0.5em;
+        }
+
+        #history-wrapper {
+            border: 1px solid red;
+            border-width: 0 0 0px 0;
+        }
+
+        .bot {
+            text-transform: lowercase;
+            font-weight: bold;
+        }
+        .bot b {
+            color: red;
+        }
+        .bot a {
+            color: red;
+            font-weight: bold;
+        }
+        .user {
+            color: #d0d0d0;
+        }
     </style>
 <body>
-<div class='hbox'>
-    <textarea id='history' class='grow'></textarea>
+<div class="fill vbox wrapper">
+    <h1>MR ROCKBOT</h1>
+    <div class='hbox grow' id="history-wrapper">
+        <div id="history" class="scroll">
+            <p class="user"><b>User:</b> Hi mister rockbot, how are you doing today?</p>
+            <p class="bot"><b>MR ROCKBOT</b>: Hello. I'm happy to meet you.</p>
+            <p class="user"><b>User:</b> Hi mister rockbot, how are you doing today?</p>
+            <p class="bot"><b>MR ROCKBOT</b>: Hello. I'm happy to meet you.</p>
+        </div>
+    </div>
+    <div class='hbox'>
+        <input id='message' class='grow' value="Tell me a joke"/>
+        <button id='send'>Send</button>
+    </div>
+    <div class="hbox">
+        <button id="french-joke">Tell me a joke [fr]</button>
+    </div>
 </div>
-<div class='hbox'>
-    <input id='message' class='grow'/>
-    <button id='send'>Send</button>
-</div>
-<div class='hbox' id='error'></div>
 <script type="text/javascript">
     // a simple JQuery like function to get elements by ID
     function $(id) {
         return document.getElementById(id);
+    }
+
+    function appendBotMessage(obj) {
+        if(typeof obj === 'string') {
+            console.log("simple string");
+            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
+                    +obj+"</p>"
+        } else {
+            console.log("got an object");
+            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
+                    + obj.text+"<br/>"
+                    +"<a href='"+obj.url+"' target='_blank'>more</a></p>"
+        }
+        $('history').scrollTop = $('history').scrollHeight;
     }
 
     //configure pubnub
@@ -36,26 +150,35 @@
     //when message comes in
     pubnub.addListener({
         message: function(msg) {
-            //if rejected, show error
-            if(msg.message.rejected) {
-                $('error').innerHTML = msg.message.reason;
-                return;
-            }
-            //append to history
-            $('history').value += msg.message.text + '\n';
+            var res = msg.message.response;
+            console.log("got back the message",msg.message);
+            appendBotMessage(msg.message.response)
         }
     });
     //listen to the 'radchat' channel
-    pubnub.subscribe({channels:['radchat']});
+    pubnub.subscribe({channels:['chatbot-response']});
     //which click the send button
-    $('send').addEventListener('click',function() {
+    $('send').addEventListener('click',sendChat);
+    function sendChat() {
+        var val = $('message').value;
+        $('history').innerHTML += "<p class='user'><b>User</b>: "+val+"</p>"
+        $('history').scrollTop = $('history').scrollHeight;
         //send the message
         pubnub.publish({
             channel:'chatbot',
-            message:{text: $('message').value}
+            message:{text: val}
         });
-        $('error').innerHTML = '';
+        $('message').value = '';
+        $('message').focus();
+    };
+    $('message').addEventListener('keypress',function(e) {
+        if(e.keyCode == 13) sendChat();
     });
+
+    $('french-joke').addEventListener('click',function() {
+        $('message').value = 'Raconte moi une blague';
+        $('message').focus();
+    })
 
 </script>
 </body>

@@ -7,7 +7,7 @@
             font-family: "mrrobot";
         }
         body {
-            font-size: 300%;
+            font-size: 250%;
             background-color: black;
             color: white;
             margin:0;
@@ -148,7 +148,8 @@
     $('send').addEventListener('click',sendChat);
     function sendChat() {
         var val = $('message').value;
-        $('history').value += ('me: '+ val + '\n');
+        $('history').innerHTML += "<p class='user'><b>User</b>: "+val+"</p>"
+        $('history').scrollTop = $('history').scrollHeight;
         //send the message
         pubnub.publish({
             channel:'chatbot',

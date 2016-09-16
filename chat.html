@@ -90,7 +90,6 @@
 
         .bot {
             text-transform: lowercase;
-            font-weight: bold;
         }
         .bot b {
             color: red;
@@ -129,16 +128,14 @@
     }
 
     function appendBotMessage(obj) {
-        if(typeof obj === 'string') {
-            console.log("simple string");
-            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
-                    +obj+"</p>"
-        } else {
-            console.log("got an object");
-            $('history').innerHTML += "<p class='bot'><b>mr rockbot</b>: "
-                    + obj.text+"<br/>"
-                    +"<a href='"+obj.url+"' target='_blank'>more</a></p>"
+        console.log("got an object", obj);
+        var text = obj.text;
+        if(obj.url) {
+            text += "<br/><a href='"+obj.url+"' target='_blank'>more</a>";
         }
+        var ftext = "<p class='bot'><b>mr rockbot</b>: "+text+"</p>"
+        console.log("final text is", ftext);
+        $('history').innerHTML += ftext;
         $('history').scrollTop = $('history').scrollHeight;
     }
 

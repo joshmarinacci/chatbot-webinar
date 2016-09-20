@@ -1,0 +1,26 @@
+.vbox {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+:focus {
+    outline: none;
+}
+.hbox {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+}
+.fill {
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+.grow {  flex: 1;   }
+.scroll {
+    overflow-y: scroll;
+}

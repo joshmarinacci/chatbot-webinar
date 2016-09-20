@@ -7,10 +7,11 @@ export default (request) => {
 
     console.log(request.message); // Log the request envelope passed 
  
-    var endpoint = "http://joshondesign.com:8112";
-    var path = '/response';
+    //var endpoint = "http://joshondesign.com:8112";
+    var endpoint = "https://jmarinacci-test-02.mybluemix.net";
+    var path = '/JSONResponder';
     var url = endpoint+path+'?'+query.stringify(request.message);
-
+    console.log("final url is",url);
     return xhr.fetch(url).then((x)=>{
         var ret = JSON.parse(x.body);
         console.log('JSON response ', ret, typeof ret);
@@ -51,7 +52,6 @@ export default (request) => {
         return xhr.fetch(url, http_options).then((trans) => {
             console.log("ret is",trans.body);
             msg.response.text = trans.body;
-            //msg.response.text = "No frenchy understandy";
             //msg.response.img = 'http://i.giphy.com/l2Je8k52tYz68HAhG.gif';
             msg.language = lang;
             console.log("final message is",msg);
